@@ -8,8 +8,8 @@
 
 # Markdown
 
-[Markdown](../Markdown/markdown.md)
+[Markdown](/Markdown/markdown.md)
 
 # React
 
-[React](../React/react.md)
+[React](/React/react.md)
