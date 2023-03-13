@@ -16,7 +16,7 @@
 
 # NPM
 
-### [NPM](/NPM/npm.md)
+### [NPM](/npm/npm.md)
 
 <br />
 
