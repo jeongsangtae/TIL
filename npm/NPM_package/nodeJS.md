@@ -1,6 +1,6 @@
 # NPM package
 
-### nodemon ( [nodeJS 설치](https://nodejs.org/ko/download/) )
+### nodeJS ( [nodeJS 설치](https://nodejs.org/ko/download/) )
 
 <br />
 
