@@ -10,26 +10,26 @@
 
 <br />
 
-[NodeJS](/NPM/NPM_package/nodeJS.md)
+[NodeJS](/npm/NPM_package/nodeJS.md)
 
-[ExpressJS](/NPM/NPM_package/expressJS.md)
+[ExpressJS](/npm/NPM_package/expressJS.md)
 
-[nodemon](/NPM/NPM_package/nodemon.md)
+[nodemon](/npm/NPM_package/nodemon.md)
 
-[ejs](/NPM/NPM_package/ejs.md)
+[ejs](/npm/NPM_package/ejs.md)
 
-[mongodb](/NPM/NPM_package/mongodb.md)
+[mongodb](/npm/NPM_package/mongodb.md)
 
-[bcryptjs](/NPM/NPM_package/bcryptjs.md)
+[bcryptjs](/npm/NPM_package/bcryptjs.md)
 
-[csurf](/NPM/NPM_package/csurf.md)
+[csurf](/npm/NPM_package/csurf.md)
 
-[express session](/NPM/NPM_package/express-session.md)
+[express session](/npm/NPM_package/express-session.md)
 
-[mongodb session store](/NPM/NPM_package/mongodb-session-store.md)
+[mongodb session store](/npm/NPM_package/mongodb-session-store.md)
 
-[multer](/NPM/NPM_package/multer.md)
+[multer](/npm/NPM_package/multer.md)
 
-[uuid](/NPM/NPM_package/uuid.md)
+[uuid](/npm/NPM_package/uuid.md)
 
-[axios](/NPM/NPM_package/axios.md)
+[axios](/npm/NPM_package/axios.md)
