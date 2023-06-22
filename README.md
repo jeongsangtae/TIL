@@ -22,6 +22,22 @@
 
 <br />
 
+# ES6
+
+### [ES6](/es6/ES6.md)
+
+<br />
+
+<br />
+
+# ES7
+
+### [ES7](/es7/ES7.md)
+
+<br />
+
+<br />
+
 # React
 
 ### [React](/React/react.md)
