@@ -17,7 +17,7 @@
 
 [arrow function](/es6/es6-content/arrow-function.md)
 
-[arrow function](/es6/es6-content/export-import.md)
+[export, import](/es6/es6-content/export-import.md)
 
 [class](/es6/es6-content/class.md)
 
