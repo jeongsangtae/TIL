@@ -44,6 +44,12 @@
 
 <br />
 
+# 프로젝트
+
+### [거래 명세서 프로젝트](/Project-Folder/Specification-On-Transaction.md)
+
+### 영화 추천 사이트 프로젝트
+
 <br />
 
 # 월 별로 가는 링크
