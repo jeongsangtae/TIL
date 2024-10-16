@@ -46,9 +46,9 @@
 
 # 프로젝트
 
-### [거래 명세서 프로젝트](/Project-Folder/Specification-On-Transaction.md)
+### [거래 명세서 프로젝트 설계](/Project-Folder/Specification-On-Transaction.md)
 
-### 영화 추천 사이트 프로젝트
+### [미니 커뮤니티 플랫폼](/Project-Folder/Mini-Community-Platform/plan.md)
 
 <br />
 
