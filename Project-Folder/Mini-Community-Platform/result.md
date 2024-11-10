@@ -86,7 +86,27 @@
 
 - 컴포넌트
   - 메인 엔트리 파일 (main.jsx)
-    - 1
+    - 기본 구성
+      - React, ReactDom, react-router-dom 라이브러리를 import해서 애플리케이션을 브라우저에 렌더링하고, 라우팅 기능을 설정
+      - AuthContextProvider와 UIContextProvider라는 두 개의 Context API Provider를 import해서 애플리케이션 전체에 인증 및 UI 상태를 공유할 수 있게 됨
+    - 라우터 설정
+      - createBrowserRouter를 사용해 각 경로별로 해당 컴포넌트를 정의하고, 필요한 경우 loader와 action 함수를 연결
+      - 경로는 RootLayout 또는 AdminRootLayout 컴포넌트를 기준으로 분리하고, 일반 사용자와 관리자의 페이지를 각각 다르게 렌더링
+    - 일반 사용자 경로
+      - / 경로 아래에는 RootLayout 컴포넌트가 메인 레이아웃으로 사용
+      - HomePage, PostsPage, PostDetailsPage, CreatePostPage, PostEditPage, ProfilePage, SignupSuccessPage 페이지가 포함되어 있고, 일부 페이지에는 인증을 요구함
+        - 인증 컴포넌트로 보호하도록 구성
+      - 각 페이지는 관련 데이터를 가져오기 위해 loader 함수를 사용하거나, 폼을 제출하는 등의 작업을 처리하기 위해 action을 사용
+        - ex) CreatePostPage, PostEditPage는 재사용되는 postFormAction을 통해 게시글 추가 및 수정 작업을 처리함
+    - 관리자 경로
+      - /admin 경로 아래는 AdminRootLayout이 메인 레이아웃으로 사용되며, 관리자의 모든 경로로는 관리자 인증이 필요함
+      - AdminHomePage, AdminPostsPage, AdminPostDetailsPage, AdminUsersPage 같은 페이지가 정의되어 있으며, 각 페이지의 데이터는 별도의 loader로 가져옴
+      - AdminPostDetailsPage에서는 action 함수를 통해 게시글 삭제 작업을 처리할 수 있음
+    - 에러 처리
+      - errorElement에 NotFound 컴포넌트를 설정하여, 각 경로에서 오류가 발생할 경우 또는 정의되지 않은 경로에 접근할 때 404 페이지로 표시
+    - 애플리케이션 진입점
+      - ReactDOM.createRoot를 사용하여 애플리케이션의 루트 엘리먼트를 생성하고, AuthContextProvider로 전체를 감싸고, 그 안에 UIContextProvider를 사용해서 감싸고, 인증과 UI 상태를 모든 컴포넌트가 접근할 수 있도록 구성
+      - RouterProvider를 통해 router 설정을 적용하여 전체 애플리케이션에 라우팅 기능을 제공
   - 페이지 컴포넌트 (pages)
     - 사용자 페이지
       - 루트 레이아웃
