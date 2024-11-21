@@ -119,5 +119,24 @@
       - 라우트 경로가 겹치므로, API 요청에 대한 경로를 수정해서 확실하게 분리하는 것을 고려해야 함
         - 프론트엔드에서 API 경로를 변경하거나, 백엔드에서 API 경로를 변경하는 방향으로 수정해야 함
         - 이건 확실하지 않지만, 프론트엔드에서 API 경로에 대한 수정이 필요할 것으로 예상
+  - 해결 방법
+    - Render를 통해 프론트엔드와 백엔드 분리 배포
+    - 프론트엔드 배포
+      - Static site를 선택하고 mini-community-platform 레포지토리를 선택
+      - Root Directory를 frontend로 구성
+      - Build Command를 구성
+        - `npm install --production=false && NODE_OPTIONS="--max-old-space-size=4096" npm run build`
+      - Publish directory를 dist로 구성
+      - 배포
+    - 백엔드 배포
+      - Web service를 선택하고 mini-community-platform 레포지토리를 선택
+      - Root Directory를 backend로 구성
+      - Start Command를 구성
+        - `npm install --production=false && npm start`
+      - Environment에 두 가지 내용을 추가
+        - CORS_URL과 MONGODB_URI 추가
+        - CORS_URL은 배포하는 프론트엔드 주소로 구성
+        - MONGODB_URI는 연결한 Mongo Atlas 내용을 입력
+      - 배포
 
 ### 배포 후 발생한 에러
