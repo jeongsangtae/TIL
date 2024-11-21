@@ -140,3 +140,64 @@
       - 배포
 
 ### 배포 후 발생한 에러
+
+- 로컬 환경의 프론트엔드에서 구성한 fetch 함수가 localhost로 연결되어 발생하는 오류
+  - 에러
+    - fetch 함수에서 구성한 API 경로가 동적으로 구성되어 있지 않고, localhost로 구성되어 있는 상태로 배포를 했기 때문에 배포한 사이트에서도 로컬 환경의 경로로 연결되어서 오류 발생
+  - 해결을 위해 테스트한 과정과 방법
+    - 배포한 프론트엔드 정적 사이트의 환경 변수와 로컬 환경의 프론트엔드 내용에서 환경 변수를 추가해 구성
+      - 배포한 프론트엔드 정적 사이트에서 환경 변수 추가
+        - REACT_APP_API_URL을 추가해서 백엔드와 연결되는 API 서버 주소를 추가
+        - 백엔드 주소인 `https://mini-community-platform-backend.onrender.com` 내용을 저장
+      - 로컬 환경의 프론트엔드 내용에서 환경 변수 추가
+        - env 파일을 추가해 기존의 localhost 내용을 넣어놓고, 테스트를 위해 게시글 페이지에서 환경 변수 내용을 사용할 수 있도록 구성
+        - REACT_APP_API_URL을 .env 파일에 추가하고, `http://localhost:3000` 내용이 들어가도록 구성
+          - `REACT_APP_API_URL = http://localhost:3000`
+        - 게시글 페이지의 fetch 함수 내용에서 환경 변수를 사용할 수 있게, apiURL 라는 변수를 추가하고 `process.env.REACT_APP_API_URL` 내용으로 구성
+          - `const apiURL = process.env.REACT_APP_API_URL`
+        - fetch 함수 내용의 API 경로에서 localhost 내용 대신에 apiURL 변수를 사용해서 구성
+          - ex) `${apiURL}/posts`
+  - 결과
+    - 배포한 프론트엔드 정적 사이트에서 환경 변수도 추가하고, 그에 맞게 로컬 환경의 프론트엔드 내용에서 환경 변수를 구성해 테스트해 봤지만, 여전히 API 경로를 제대로 읽지 못하기 때문에 추가 수정이 필요
+
+<br />
+
+- 구성한 환경 변수 오류 1, 2
+  - 에러
+    - 환경 변수 오류 1
+      - 게시글 페이지의 loader 함수 내에서 변수를 구성하지 않고 바깥에서 구성한 후, 사용해서 오류 발생
+    - 환경 변수 오류 2
+      - console.log를 추가해서 오류를 확인해보니, 환경 변수 자체를 읽지 못하는 오류가 발생
+  - 해결을 위해 테스트한 과정과 방법
+    - 환경 변수 오류 1
+      - 문제를 해결하기 위해서 loader 함수 내에서 apiURL 변수를 구성해서 사용할 수 있도록 변경
+      - 추가로 .env 파일에서 구성한 환경 변수 내용에 띄어쓰기를 사용하면 문제가 되기 때문에 띄어쓰기가 사용되지 않도록 변경
+        - `REACT_APP_API_URL=http://localhost:3000`
+    - 환경 변수 오류 2
+      - Vite로 구성된 React 앱에서는 create-react-app으로 구성한 React앱과는 다르게 환경 변수 설정을 해줘야 제대로 읽을 수 있기 때문에 Vite 방식으로 환경 변수를 구성
+      - .env 파일에서 Vite 방식으로 변경
+        - `VITE_API_URL=http://localhost:3000`
+      - apiURL 변수도 Vite 방식으로 변경
+        - `const apiURL = import.meta.env.VITE_API_URL;`
+      - Vite 방식으로 변경하고 확인해 보면 `console.log(import.meta.env)`도 문제없이 작동되어 콘솔에서 확인됨
+  - 해결 방법
+    - 환경 변수 오류 1
+      - 게시글 페이지의 환경 변수 문제는 loader 함수 내에서 변수를 구성해 주면서 해결
+      - .env 파일에서 구성한 환경 변수 내용에 띄어쓰기가 포함되지 않도록 변경해 미리 오류 예방
+    - 환경 변수 오류 2
+      - 구성된 환경 변수 방식을 Vite 방식으로 변경해주면서, 환경 변수를 읽을 수 있게 되고 오류가 해결됨
+        - `VITE_API_URL=http://localhost:3000`
+        - `const apiURL = import.meta.env.VITE_API_URL;`
+      - 일반적인 React와 Vite에서 환경 변수 접근 방식
+        - React
+          - create-react-app에서는 환경 변수를 `REACT_APP_`으로 시작해야 함
+          - REACT_APP_API_URL 라는 네이밍으로 사용 가능
+          - `process.env`는 일반적으로 Node.js 환경에서 사용할 수 있고, create-react-app 같은 CRA 도구에서도 환경 변수를 읽는 데 사용되지만, Vite에서는 불가능
+            - `process.env.REACT_APP_API_URL` 내용으로 환경 변수를 불러올 수 있음
+          - CRA에서는 `REACT_APP_` 접두사를 가진 환경 변수만 읽을 수 있지만, Vite는 `VITE_` 접두사를 가진 변수만 읽을 수 있음
+        - Vite
+          - Vite에서는 환경 변수를 "VITE\_"로 시작해야 함
+          - VITE_API_URL 라는 네이밍으로 사용 가능
+          - `import.meta`를 사용하여 모듈 메타 정보를 제공하고, 환경 변수에 접근할 수 있게 해줌
+          - `import.meta.env`는 Vite에 의해 제공되는 특수한 객체로, 이 객체를 통해 변수에 접근 가능
+            - `import.meta.env.VITE_API_URL` 내용으로 환경 변수를 불러올 수 있음
