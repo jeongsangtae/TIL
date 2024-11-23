@@ -295,3 +295,21 @@
         - 개발 중에 사용되는 "localhost"는 대부분의 브라우저에서 특별한 취급을 받기 때문에 sameSite 속성이 없는 경우에도 쿠키가 정상적으로 작동할 수 있음
       - 배포 환경에서는 CORS 및 보안 정책이 엄격하게 적용되므로, 쿠키가 제대로 전달되도록 sameSite 설정을 명시적으로 정의해야 함
   - [코드 내용](https://github.com/jeongsangtae/mini-community-platform/commit/5e5c2de0bc4190d2f488fcae2e557409f64dd423)
+
+<br />
+
+- 로그아웃 한 후에 쿠키에 저장된 토큰이 삭제되지 않는 오류
+  - 에러
+    - 로그인 한 후에 로그아웃을 하면 로컬 스토리지에 저장된 내용만 삭제되고, 쿠키에 저장된 토큰은 삭제되지 않는 오류가 발생
+  - 해결 방법
+    - user-routes.js 내용의 로그아웃 라우터 수정
+      - isProduction 변수를 추가
+      - clearCookie 내용에 secure과 sameSite 내용 추가
+        - secure
+          - 토큰을 쿠키에 저장할 때 구성해준 내용과 마찬가지로, 로컬 환경에서는 false가 적용되고, 배포 환경에서 true가 적용되도록 구성
+        - sameSite
+          - 여기서도 토큰을 쿠키에 저장할 때 구성해준 내용과 마찬가지로, 로컬 환경에서는 "Lax"가 들어가도록 해주고, 배포 환경에서는 "None"이 들어가도록 구성
+    - 쿠키에 토큰을 저장할 때와 마찬가지로, 쿠키에 저장된 내용을 삭제할 때 secure, sameSite, domain, path 같은 옵션들을 확인해 문제가 없을 때 삭제되도록 구성
+    - 쿠키에 토큰을 저장할 때 domain, path 옵션은 사용하지 않고 secure, sameSite만 설정했기 때문에 이 두 가지 내용만 추가해 오류가 발생하지 않도록 구성
+    - res.clearCookie 내용은 res.cookie에서 설정한 속성들과 동일하게 구성해 오류가 발생하지 않도록 구성
+  - [코드 내용](https://github.com/jeongsangtae/mini-community-platform/commit/96fca6893e6b44316043cf682615a5ce7246a13b)
