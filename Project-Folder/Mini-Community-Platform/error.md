@@ -2,6 +2,19 @@
 
 ### 프로젝트 구성 중 발생한 에러
 
+- BSONError 에러
+  - 에러
+    - Node.js 애플리케이션에서 주로 발생하는 에러로, BSON(Binary JSON) 데이터를 처리하는 과정에서 문제가 생겼을 때 발생
+      - BSON은 MongoDB가 데이터를 저장하고 전송할 때 사용하는 바이너리 형식
+      - BSON 데이터가 잘못된 형식으로 제공되었거나 손상되었을 때 발생
+      - ex) JSON.parse()로 처리할 수 없는 형식의 데이터를 BSON으로 변환하려고 시도할 경우 발생
+    - 로그인을 하고 바로 채팅을 입력하면 사용자의 \_id 내용과 이메일 내용이 바로 전달되지 못하며 BSONError 에러가 발생
+  - 해결 방법
+    - 전달되는 내용이 아직 로드되지 않은 상태에서 null이나 undefined 되지 않도록 "?"를 추가해 해결
+  - [코드 내용](https://github.com/jeongsangtae/mini-community-platform/commit/cd511cb7d8d75bc0fd5aae4a7aa51ee1c00c4194)
+
+<br />
+
 - CORS 에러
   - 에러
     - cors 패키지를 추가하고 CORS 관련 헤더를 모든 도메인에서 요청이 허용하도록 처리을 해줬지만 CORS 정책에 의해 차단되었다는 오류가 콘솔에서 발생
