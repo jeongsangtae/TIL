@@ -3,3 +3,5 @@
 ### [설계](/Project-Folder/Float-Chat/plan.md)
 
 <br />
+
+### [에러](/Project-Folder/Float-Chat/error.md)
