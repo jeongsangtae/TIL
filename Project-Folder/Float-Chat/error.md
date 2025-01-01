@@ -47,3 +47,16 @@
     - react router dom 7.1.1 버전은 TypeScript 5.x 대 버전과 호환에도 문제가 없고, TypeScript 제네릭 타입 지원을 하기 때문에 에러없이 사용 가능
     - `npx tsc` 명령어를 통해 TypeScript 빌드를 실행해 타입 에러가 발생하는지 확인한 결과, 빌드 중 타입 에러가 없는 것을 확인
       - 6.28.0, 6.14.2 버전에서는 `npx tsc` 명령어를 치면 타입 에러가 있다고 확인이 됐었음
+
+<br />
+
+- children 속성이 없다는 에러
+  - 에러
+    - React.FC를 사용하면 children 속성을 기본적으로 포함하므로, `{ onToggle: () => void }`로 직접 타입을 정의했을 때는 children이 명시적으로 포함되지 않아 TypeScript가 children 속성이 없다고 판단하는 에러
+    - React.FC 정의된 형태
+      - `type React.FC<P = {}> = FunctionComponent<P & { children?: ReactNode }>;`
+    - React.FC를 사용하면 children 속성이 암묵적으로 추가되지만, `React.FC<{ onToggle: () => void }>`로 작성한 경우, children 속성이 타입 정의에 없다고 간주되면서 onToggle만 포함된 타입으로 처리되어 children이 누락되었다는 오류가 발생
+  - 해결 방법
+    - React.FC를 유지하면서 타입 정의 수정
+    - children을 명시적으로 포함하도록 타입 정의를 확장
+      - `const AuthModal: React.FC<{ onToggle: () => void; children?: React.ReactNode }> = ({ children, onToggle }) => {...}`
