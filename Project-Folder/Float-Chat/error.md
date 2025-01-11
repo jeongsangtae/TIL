@@ -60,3 +60,82 @@
     - React.FC를 유지하면서 타입 정의 수정
     - children을 명시적으로 포함하도록 타입 정의를 확장
       - `const AuthModal: React.FC<{ onToggle: () => void; children?: React.ReactNode }> = ({ children, onToggle }) => {...}`
+
+<br />
+
+- filter 관련 타입 불일치(확장) 에러
+  - 에러
+    - filter를 추가해 반환하는 새로운 배열에서 기존에 구성한 타입 정의 내용과 호환되지 않는 에러 발생
+      - filter를 통해 반환되는 새로운 배열에서는 null 값이 넘어올 수 없으나, 구성된 타입 정의 내용은 null을 포함하고 있어서 에러가 발생
+    - filter로 인해 타입이 확장되어, TypeScript는 배열의 filter 함수에서 반환된 데이터의 타입을 정확히 추론하지 못하는 에러
+      - filter 조건에서 특정 타입을 확인하지 않으면 "type" 속성이 기본적으로 string으로 간주될 수 있음
+  - 에러 원인 추가 내용
+    - filter 메서드로 인해 타입 확장이 발생
+      - TypeScript는 filter를 적용하면 결과 배열의 타입을 명시적으로 좁히지 않는 한, 배열의 원소 타입을 기본적으로 넓게 설정
+      - filter로 반환된 결과가 `type: ModalType`으로 유지되지 않고, `type: string`으로 확장되어 타입 호환 문제가 발생
+    - 타입 명시와 타입 추론의 차이
+      - `const modals: { ... }[]`로 타입을 명시했지만, filter 이후의 결과가 TypeScript에 의해 자동으로 string 타입으로 추론
+      - 결과 배열의 type 속성이 ModalType 대신 string으로 간주되었고, 타입 불일치가 발생
+  - 해결 방법
+    - 타입 정의를 분리
+      - 기존의 타입 정의에서 구성된 null 내용은 따로 분리
+      - 기존 타입 정의
+        - `type ModalType = "login" | "signup" | "createGroupChat" | null;`
+      - 수정 후 타입 정의
+        - `type ModalType = "login" | "signup" | "createGroupChat";`
+        - `type ActiveModalType = ModalType | null;`
+    - filter 내용을 분리해 타입 추론의 안정성 확보
+      - 이전 내용 구성
+        - 필터링 로직을 분리하지 않고, modals에 바로 연결해 구성
+        ```
+        const modals: {
+          type: ModalType;
+          label: string;
+          component: React.ComponentType<ModalProps>;
+        }[] = [
+          { type: "login", label: "로그인", component: Login },
+          { type: "signup", label: "회원가입", component: Signup },
+          { type: "createGroupChat", label: "+", component: CreateGroupChat },
+        ].filter(({ type }) => {
+          if (isLoggedIn) {
+            return type !== "login" && type !== "signup";
+          }
+          return type !== "createGroupChat";
+        });
+        ```
+      - 수정 후 내용 구성
+        - 필터링 로직을 별도의 변수로 분리하고, 타입을 명확히 지정하면 타입 호환 문제가 발생하지 않음
+        ```
+        const modals: {
+          type: ModalType;
+          label: string;
+          component: React.ComponentType<ModalProps>;
+        }[] = [
+          { type: "login", label: "로그인", component: Login },
+          { type: "signup", label: "회원가입", component: Signup },
+          { type: "createGroupChat", label: "+", component: CreateGroupChat },
+        ];
+        ```
+        ```
+        const filteredModals = modals.filter(({ type }) => {
+          if (isLoggedIn) {
+            return type !== "login" && type !== "signup";
+          }
+          return type !== "createGroupChat";
+        });
+        ```
+      - 또 다른 해결방법
+        - filter 이후에도 원래 타입이 유지되도록 명시적으로 선언할 수 있음
+        - "as"를 사용해 결과 타입을 강제하면 문제가 해결됨
+        ```
+        const modals = [
+          { type: "login", label: "로그인", component: Login },
+          { type: "signup", label: "회원가입", component: Signup },
+          { type: "createGroupChat", label: "+", component: CreateGroupChat },
+        ].filter(({ type }) => {
+          if (isLoggedIn) {
+            return type !== "login" && type !== "signup";
+          }
+          return type !== "createGroupChat";
+        }) as { type: ModalType; label: string; component: React.ComponentType<ModalProps>; }[];
+        ```
