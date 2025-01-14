@@ -139,3 +139,25 @@
           return type !== "createGroupChat";
         }) as { type: ModalType; label: string; component: React.ComponentType<ModalProps>; }[];
         ```
+
+<br />
+
+- localStorage.getItem 관련 타입 에러 (parseInt 오류)
+  - 에러
+    - React 프로젝트에서 구성한대로 parseInt를 사용해 localStorage.getItem를 감싸면 에러가 발생
+    - localStorage.getItem은 항상 string 또는 null을 반환하기 때문에, TypeScript는 null 값에 대한 parseInt를 사용할 때 타입 에러를 발생시킴
+    - localStorage에서 가져온 값이 null일 가능성을 무시해서 발생하는 에러
+  - 에러를 발생시킨 코드
+    ```
+    const storedExpirationTime = parseInt(localStorage.getItem("expirationTime"));
+    const refreshTokenExpirationTime = parseInt(localStorage.getItem("refreshTokenExp"));
+    ```
+  - 해결 방법
+    - localStorage.getItem은 항상 string 또는 null을 반환하기에 null을 처리하면 에러를 방지할 수 있음
+      - 기본값을 제공하거나 조건부 처리를 추가하면 됨
+    ```
+    const storedExpirationTime = parseInt(localStorage.getItem("expirationTime") || "0", 10);
+    const refreshTokenExpirationTime = parseInt(localStorage.getItem("refreshTokenExp") || "0", 10);
+    ```
+    - 위 코드는 null일 경우 0으로 변환해서 에러를 처리
+    - 위 코드처럼 0을 기본값으로 설정하고 싶지 않다면, null 상태를 처리하는 로직이 필요
