@@ -161,3 +161,44 @@
     ```
     - 위 코드는 null일 경우 0으로 변환해서 에러를 처리
     - 위 코드처럼 0을 기본값으로 설정하고 싶지 않다면, null 상태를 처리하는 로직이 필요
+
+<br />
+
+- Encountered two children with the same key (key 중복 관련 에러)
+  - 에러
+    - React 프로젝트에서 구성한 방법을 조금 수정해 Zustand에 구성하고 테스트한 결과, 실시간 반영 부분에서 key 중복 관련 에러가 발생함
+    - Zustand에서 WebSocket 같은 실시간 데이터 처리 내용은 중복 처리를 신경 써서 코드 구성을 해야 함
+    - Zustand는 상태 업데이트 방식이 React useState와 다르고, 중복을 자동으로 처리하지 않기 때문에 직접 걸러줘야 함
+  - 해결 방법
+    ```
+    newSocket.on("newMessage", (newMessage: string) => {
+      set((prevMsg) => ({
+        messages: [...prevMsg.messages, newMessage],
+      }));
+      console.log("사용자 input 메시지: ", newMessage);
+    });
+    ```
+    - 위 코드를 아래 코드로 변경
+    ```
+    newSocket.on("newMessage", (newMessage: string) => {
+      set((prevMsg) => {
+        // 기존 메시지와 새로운 메시지가 중복되지 않도록 처리
+        const isDuplicate = prevMsg.messages.some(
+          (msg) => msg._id === newMessage._id
+        );
+        // 중복된 메시지는 추가하지 않음
+        if (isDuplicate) {
+          return prevMsg;
+        }
+        // 새 메시지를 추가
+        return {
+           messages: [...prevMsg.messages, newMessage],
+        };
+      });
+      console.log("사용자 input 메시지: ", newMessage);
+    });
+    ```
+    - some()을 추가해 활용하고 중복을 체크하도록 구성 추가
+    - 사실, 이렇게 some()을 활용해 해결하는 것이 올바른 해결 방법인지 확신은 없음
+      - 원천적인 해결이 아닌, 임시방편? 그런 느낌이 들어서 확신이 없음
+      - 결국 중복 렌더링 문제는 해결되지 않은 것 같아서, 위 방법으로 해결할 수는 있긴 하지만 좀 더 방법을 찾아보고 다른 방법이 없다면 위 방법으로 처리할 생각임
