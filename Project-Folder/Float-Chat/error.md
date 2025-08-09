@@ -204,7 +204,7 @@
 
 <br />
 
-- Encountered two children with the same key... (key 중복 관련 에러 추가 정리)
+- Encountered two children with the same key... (키 중복 관련 에러 추가 정리)
   - 에러
     - 그룹 채팅방 초대 관련 내용의 실시간 반영 부분에서 key 중복 관련 에러가 발생함
       - 소켓 이벤트 리스너 중복 등록 때문에 key 중복 관련 에러 발생
