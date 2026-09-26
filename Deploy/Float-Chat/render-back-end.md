@@ -1,8 +1,13 @@
 # Render 백엔드 배포 내용 정리
 
-## 초기 순서
+## 초기 설정 순서
 
-- 초기 순서
+- Web Service 선택
+- 깃 허브에서 선택하려는 프로젝트 보여지도록 설정하고 해당 프로젝트 연결
+- 프로젝트 이름과 Language, Branch, Region 설정
+- Root Directory와 Build 시에 실행될 명령어, 시작 명령어 설정
+- Compute는 무료로 설정
+- 환경 변수 설정해도 되고, 추후에 추가해도 문제없음
 
 ## Settings
 
